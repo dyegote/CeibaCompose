@@ -2,7 +2,6 @@ package com.dt.composeapp.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.dt.composeapp.Person
-import com.dt.composeapp.PersonParcelable
 import  com.dt.composeapp.R
 
 //Sin estado (stateless)
@@ -34,6 +32,7 @@ fun IdentificationTextField(identification: MutableState<String>){
     )
 }
 
+//Elevacion de estado (State hoisting)
 @Composable
 fun NameTextField(name: String, onValueChange: (newValue: String) -> Unit){
     OutlinedTextField(
@@ -89,10 +88,11 @@ fun PersonListContent(personas:  MutableState<List<Person>>) {
 }
 
 
+//Con estado(statefull)
 @Composable
 fun ProgressDialog(mostrarProgress: Boolean){
 
-    val texto = remember { mutableStateOf("Crgando...") }
+    val texto = remember { mutableStateOf("Cargando...") }
     //val texto by  remember { mutableStateOf("Crgando...") }
 
     if(mostrarProgress) {
