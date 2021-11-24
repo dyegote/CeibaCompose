@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ComposeApp</string>
+    <string name="tittle">Datos personales</string>
+    <string name="save">Guardar</string>
+    <string name="identification">Identificacion</string>
+    <string name="name">Nombre</string>
+    <string name="close">CERRAR</string>
+    <string name="generic_error">Error deconocido</string>
+    <string name="save_message">Datos guardados</string>
 </resources>

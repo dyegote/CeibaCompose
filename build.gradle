@@ -4,6 +4,7 @@ buildscript {
         compose_version = '1.0.1'
         roomVersion = '2.3.0'
         hiltVersion = '2.39.1'
+        lifecycleVersion = '2.3.1'
     }
     repositories {
         google()
