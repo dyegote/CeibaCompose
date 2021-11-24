@@ -22,11 +22,7 @@ class PersonViewModel @Inject constructor(private val repository: PersonResposit
 
     fun loadPersons() : LiveData<Resource<List<Person>>>{
         return try {
-            var persons = listOf<Person>()
-            viewModelScope.launch {
-                delay(1000)
-                persons = repository.loadPersons()
-            }
+            val persons = repository.loadPersons()
             MutableLiveData(Resource.success(persons))
         } catch(ex: Exception) {
             MutableLiveData(Resource.error(ex))

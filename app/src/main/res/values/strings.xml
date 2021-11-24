@@ -6,5 +6,7 @@
     <string name="name">Nombre</string>
     <string name="close">CERRAR</string>
     <string name="generic_error">Error deconocido</string>
-    <string name="save_message">Datos guardados</string>
+    <string name="save_message">Ingrese datos</string>
+    <string name="persons">Personas</string>
+    <string name="input_data">Ingresar datos</string>
 </resources>

@@ -1,7 +1,11 @@
 package com.dt.composeapp.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.dt.composeapp.Person
+import com.dt.composeapp.PersonParcelable
 import  com.dt.composeapp.R
 
 //Sin estado (stateless)
@@ -37,6 +43,51 @@ fun NameTextField(name: String, onValueChange: (newValue: String) -> Unit){
         modifier = Modifier.fillMaxWidth()
     )
 }
+
+@SuppressLint("ResourceType")
+@Composable
+fun PersonCard(nombre: String, identificacion: String)
+{
+    Card(
+        modifier = Modifier.padding(6.dp).fillMaxWidth().wrapContentHeight(),
+        shape = MaterialTheme.shapes.medium,
+        elevation = 5.dp,
+        backgroundColor = MaterialTheme.colors.surface
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.padding(12.dp)) {
+                Text(
+                    text = nombre,
+                    style = MaterialTheme.typography.subtitle1,
+                    color = MaterialTheme.colors.onSurface,
+                )
+                Text(
+                    text = "CC $identificacion",
+                    style = MaterialTheme.typography.body2,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PersonListContent(personas:  MutableState<List<Person>>) {
+
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+
+        items(items = personas.value){ person ->
+            PersonCard(
+                nombre = person.name,
+                identificacion = person.identification
+            )
+        }
+
+    }
+}
+
 
 @Composable
 fun ProgressDialog(mostrarProgress: Boolean){
@@ -107,7 +158,7 @@ fun GenericTopAppBar(topAppBarText: String, onBackPressed: () -> Unit = {}) {
 }
 
 @Composable
-fun GenericButton(label: String, enabled: Boolean, onClick: () -> Unit){
+fun GenericButton(label: String, enabled: Boolean = true, onClick: () -> Unit){
     Button(
         onClick = onClick,
         modifier = Modifier
