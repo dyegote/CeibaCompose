@@ -120,44 +120,6 @@ fun ProgressDialog(mostrarProgress: Boolean){
 }
 
 @Composable
-fun Titulo(texto: String){
-    Text(
-        text = texto,
-        style = MaterialTheme.typography.subtitle1,
-        color = MaterialTheme.colors.primary)
-}
-
-@Composable
-fun GenericTopAppBar(topAppBarText: String, onBackPressed: () -> Unit = {}) {
-    TopAppBar(
-        title = {
-            Text(
-                text = topAppBarText,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.subtitle1,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackPressed) {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowLeft,
-                    contentDescription = null
-                )
-            }
-        },
-        // We need to balance the navigation icon, so we add a spacer.
-        actions = {
-            Spacer(modifier = Modifier.width(68.dp))
-        },
-        backgroundColor = MaterialTheme.colors.surface,
-        elevation = 3.dp
-    )
-}
-
-@Composable
 fun GenericButton(label: String, enabled: Boolean = true, onClick: () -> Unit){
     Button(
         onClick = onClick,
@@ -170,44 +132,5 @@ fun GenericButton(label: String, enabled: Boolean = true, onClick: () -> Unit){
     }
 }
 
-@Composable
-fun GenericSnackbar(snackbarHostState: SnackbarHostState)
-{
-    Box(modifier = Modifier.fillMaxSize()) {
-        SnackbarConfirmation(
-            snackbarHostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-    }
-}
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun SnackbarConfirmation(
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
-) {
-    SnackbarHost(
-        hostState = snackbarHostState,
-        snackbar = { data ->
-            Snackbar(
-                modifier = Modifier.padding(16.dp),
-                backgroundColor = SnackbarDefaults.backgroundColor.copy(alpha = 0.9f),
-                content = {
-                    Text(text = data.message, style = MaterialTheme.typography.body2)
-                },
-                action = {
-                    TextButton(
-                        onClick = { snackbarHostState.currentSnackbarData?.dismiss() }
-                    ) {
-                        Text(text = stringResource(id = R.string.close), color = MaterialTheme.colors.onError)
-                    }
-                }
-            )
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight(Alignment.Bottom)
-    )
-}
 
