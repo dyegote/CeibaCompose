@@ -87,38 +87,6 @@ fun PersonListContent(personas:  List<Person>) {
     }
 }
 
-
-//Con estado(statefull)
-@Composable
-fun ProgressDialog(mostrarProgress: Boolean){
-
-    val texto = remember { mutableStateOf("Cargando...") }
-    //val texto by  remember { mutableStateOf("Crgando...") }
-
-    if(mostrarProgress) {
-        Dialog(
-            onDismissRequest = { },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-            ) {
-                Row(
-                    modifier = Modifier.padding(24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    CircularProgressIndicator()
-                    Text(text = texto.value)
-                }
-            }
-        }
-    }
-}
-
 @Composable
 fun GenericButton(label: String, enabled: Boolean = true, onClick: () -> Unit){
     Button(
