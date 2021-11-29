@@ -10,18 +10,20 @@ class PersonRespository(val context: Context) {
 
     private val personaDao: PersonDao by lazy { AppDatabase.getInstance(context).personDao() }
 
-    fun savePerson(person: Person){
+    fun savePerson(person: Person) : Person{
 
         if(person.identification.isNullOrBlank() || person.name.isNullOrBlank())
             throw Exception("Datos no validos")
 
-        Thread.sleep(1000)
+        //Thread.sleep(3000)
 
         val entity = personaDao.getByIdentification(person.identification)
         entity?.let {
             it.name = person.name
             personaDao.actualizar(entity)
         } ?: personaDao.insert(PersonEntity(person.identification, person.name))
+
+        return  person
     }
 
     fun loadPersons() : List<Person>{

@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.dt.composeapp.database.dao.PersonDao
 import com.dt.composeapp.database.model.PersonEntity
 
-@Database(entities = [PersonEntity::class], version = 1)
+@Database(entities = [PersonEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun personDao(): PersonDao

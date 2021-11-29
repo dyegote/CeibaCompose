@@ -1,9 +1,6 @@
 package com.dt.composeapp.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.dt.composeapp.Person
 import com.dt.composeapp.database.repository.PersonRespository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,18 +11,29 @@ import javax.inject.Inject
 @HiltViewModel
 class PersonViewModel @Inject constructor(private val repository: PersonRespository) :  ViewModel()
 {
-    fun savePerson(person: Person) : LiveData<Resource<Person>> {
-        return resourceFlow{
-            emit(Resource.success(repository.savePerson(person)))
-        }.build() as LiveData<Resource<Person>>
+
+    val persoState = MutableLiveData<Resource<Person>>()
+    val personsState = MutableLiveData<Resource<List<Person>>>()
+
+    fun savePerson(person: Person){
+        persoState.value = Resource.loading("Cargando")
+        viewModelScope.launch {
+            delay(3000)
+            try{
+                persoState.value = Resource.success(repository.savePerson(person))
+            }catch (ex: java.lang.Exception){
+                persoState.value = Resource.error(ex)
+            }
+        }
+
     }
 
-    fun loadPersons() : LiveData<Resource<List<Person>>>{
-        return try {
+    fun loadPersons(){
+        try {
             val persons = repository.loadPersons()
-            MutableLiveData(Resource.success(persons))
+            personsState.value = Resource.success(persons)
         } catch(ex: Exception) {
-            MutableLiveData(Resource.error(ex))
+            personsState.value = Resource.error(ex)
         }
     }
 

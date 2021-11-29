@@ -70,14 +70,14 @@ fun PersonCard(nombre: String, identificacion: String)
 }
 
 @Composable
-fun PersonListContent(personas:  MutableState<List<Person>>) {
+fun PersonListContent(personas:  List<Person>) {
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
 
-        items(items = personas.value){ person ->
+        items(items = personas){ person ->
             PersonCard(
                 nombre = person.name,
                 identificacion = person.identification

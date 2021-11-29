@@ -23,7 +23,6 @@ import com.dt.composeapp.viewmodel.Status
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import  com.dt.composeapp.R
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,7 +30,6 @@ class MainActivity : ComponentActivity() {
     lateinit var snackbarHostState: SnackbarHostState
     lateinit var scope: CoroutineScope
     private val personViewModel: PersonViewModel by viewModels()
-    val personsLiveData =  MutableLiveData(listOf<Person>())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +38,27 @@ class MainActivity : ComponentActivity() {
                 snackbarHostState = remember { SnackbarHostState() }
                 scope = rememberCoroutineScope()
 
-                val persons = personsLiveData.observeAsState() as MutableState<List<Person>>
-                var showProgress = rememberSaveable { mutableStateOf(false) }
+                val persons = personViewModel.personsState.observeAsState()
+                var person = personViewModel.persoState.observeAsState()
+
                 var identification = rememberSaveable { mutableStateOf("") }
                 var name by rememberSaveable { mutableStateOf("") }
+
+                when(person.value?.status){
+                    Status.LOADING -> { ProgressDialog(true) }
+                    Status.SUCCESS -> {
+                        ProgressDialog(false)
+                        personViewModel.loadPersons()
+                        mostrarSnackbar(getString(R.string.save_message))
+                    }
+                    Status.ERROR -> {
+                        ProgressDialog(false)
+                        val message = person.value?.exception?.let { it.message } ?: getString(R.string.generic_error)
+                        mostrarSnackbar(message)
+                    }
+                }
+
+                personViewModel.loadPersons()
 
                 Surface(color = MaterialTheme.colors.background) {
 
@@ -60,64 +75,25 @@ class MainActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Titulo(texto = stringResource(R.string.persons))
                                 Spacer(modifier = Modifier.height(12.dp))
-                                PersonListContent(personas = persons)
+                                persons.value?.data?.let {
+                                    PersonListContent(personas = it)
+                                }
                             }
                         },
                         bottomBar = {
                             GenericButton(
                                 label = stringResource(R.string.save),
                                 onClick = {
-                                    val person = Person(identification.value, name)
-                                    savePerson(person, showProgress)
+                                    personViewModel.savePerson(Person(identification.value, name))
                                 }
                             )
                         }
                     )
                 }
 
-                ProgressDialog(showProgress.value)
                 GenericSnackbar(snackbarHostState = snackbarHostState)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadPersons()
-    }
-
-    private fun savePerson(person: Person, showProgress: MutableState<Boolean>){
-        personViewModel.savePerson(person).observe( this, { resultado ->
-            when(resultado.status){
-                Status.LOADING -> {
-                    showProgress.value = true
-                }
-                Status.SUCCESS -> {
-                    showProgress.value = false
-                    loadPersons()
-                    mostrarSnackbar(getString(R.string.save_message))
-                }
-                Status.ERROR -> {
-                    showProgress.value = false
-                    val message = resultado.exception?.let { it.message } ?: getString(R.string.generic_error)
-                    mostrarSnackbar(message)
-                }
-            }
-        })
-    }
-
-    private fun loadPersons(){
-        personViewModel.loadPersons().observe( this, { resultado ->
-            when(resultado.status){
-                Status.SUCCESS -> {
-                    personsLiveData.value = resultado.data
-                }
-                Status.ERROR -> {
-                    val message = resultado.exception?.let { it.message } ?: getString(R.string.generic_error)
-                    mostrarSnackbar(message)
-                }
-            }
-        })
     }
 
     private fun mostrarSnackbar(message: String){
